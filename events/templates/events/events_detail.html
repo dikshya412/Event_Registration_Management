@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{event.title}}</title>
+</head>
+<body>
+    <h1>{{ event.title }}</h1>
+
+    <p>{{ event.description }}</p>
+
+    <p>
+        <strong>Date:</strong>
+        {{ event.date }}
+    </p>
+
+    <p>
+        <strong>Time:</strong>
+        {{ event.time }}
+    </p>
+
+    <p>
+        <strong>Venue:</strong>
+        {{ event.venue }}
+    </p>
+
+    <p>
+        <strong>Organizer:</strong>
+        {{ event.organizer.username }}
+    </p>
+
+    <p>
+        <strong>Created:</strong>
+        {{ event.created_at }}
+    </p>
+
+    <br>
+
+    <a href="{% url 'event_list' %}">← Back to Events</a>
+</body>
+</html>
