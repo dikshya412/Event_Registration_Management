@@ -8,6 +8,8 @@
 <body>
     <h1>Campus Events</h1>
 
+    <a href="{% url 'event_create' %}"> Create New Event</a>
+
     {% for event in events %}
 
         <div>
