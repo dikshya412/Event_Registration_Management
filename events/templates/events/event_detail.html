@@ -36,7 +36,11 @@
     </p>
 
     <br>
-
+    <a href="{% url 'event_update' event.id %}"> Edit Event </a>
+    <br><br>
+    <a href="{% url 'event_delete' event.id %}"> Delete Event </a>
+    <br><br>
     <a href="{% url 'event_list' %}">← Back to Events</a>
+
 </body>
 </html>
