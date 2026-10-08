@@ -13,6 +13,11 @@ class EventForm(forms.ModelForm):
             'venue',
             'organizer',
         ]
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'time': forms.TimeInput(attrs={'type': 'time'}, format='%H:%M'),
+        }
+        
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     class Meta:
