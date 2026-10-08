@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import Event
 from .forms import EventForm,RegisterForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -22,6 +23,7 @@ def event_detail(request, event_id):
     })
 
 # for creating events
+@login_required
 def event_create(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -95,3 +97,9 @@ def user_login(request):
         })
     
     return render(request, 'events/login.html')
+
+# for logout
+def user_logout(request):
+    logout(request)
+    return redirect('event_list')
+
