@@ -11,7 +11,6 @@ class EventForm(forms.ModelForm):
             'date',
             'time',
             'venue',
-            'organizer',
         ]
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),

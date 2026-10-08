@@ -36,9 +36,11 @@
     </p>
 
     <br>
+    {% if user == event.organizer %}
     <a href="{% url 'event_update' event.id %}"> Edit Event </a>
     <br><br>
     <a href="{% url 'event_delete' event.id %}"> Delete Event </a>
+    {% endif %}
     <br><br>
     <a href="{% url 'event_list' %}">← Back to Events</a>
 

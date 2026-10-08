@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import Event
 from .forms import EventForm,RegisterForm
@@ -28,7 +29,10 @@ def event_create(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            form.save()
+            event = form.save(commit=False)
+            event.organizer = request.user
+            event.save()
+            
             return redirect('event_list')
     else:
         form = EventForm()
@@ -38,8 +42,14 @@ def event_create(request):
     })
 
 # for editing events 
+@login_required
 def event_update(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    if event.organizer != request.user:
+        return HttpResponse(
+            "You are not allowed to edit this event."
+        )
+
     if request.method == 'POST':
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
@@ -54,8 +64,14 @@ def event_update(request, event_id):
     })
 
 # for delete 
+@login_required
 def event_delete(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    if event.organizer != request.user:
+        return HttpResponse(
+            "You are not allowed to delete this event."
+        )
+
     if request.method == 'POST':
         event.delete()
         return redirect('event_list')
