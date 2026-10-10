@@ -7,40 +7,59 @@
 </head>
 <body>
     <h1>{{ event.title }}</h1>
-
     <p>{{ event.description }}</p>
-
     <p>
         <strong>Date:</strong>
         {{ event.date }}
     </p>
-
     <p>
         <strong>Time:</strong>
         {{ event.time }}
     </p>
-
     <p>
         <strong>Venue:</strong>
         {{ event.venue }}
     </p>
-
+    <p>
+        <strong>Total Registrations:</strong>
+        {{ registration_count }}
+    </p>
     <p>
         <strong>Organizer:</strong>
         {{ event.organizer.username }}
     </p>
-
     <p>
         <strong>Created:</strong>
         {{ event.created_at }}
     </p>
-
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
     <br>
     {% if user == event.organizer %}
     <a href="{% url 'event_update' event.id %}"> Edit Event </a>
     <br><br>
     <a href="{% url 'event_delete' event.id %}"> Delete Event </a>
     {% endif %}
+
+    {% if user.is_authenticated %}
+        {% if is_registered %}
+            <p>You are already registered for this event! </p>
+        {% else %}
+            <form method="POST" action="{% url 'event_register' event.id %}">
+                {% csrf_token %}
+                <button type="submit">Register for Event</button>
+            </form>
+        {% endif %}
+    {% else %}
+    <p>
+        Please <a href="{% url 'login' %}?next={{ request.path }}">log in</a>
+        to register for this event.
+    </p>
+    {% endif %}
+
     <br><br>
     <a href="{% url 'event_list' %}">← Back to Events</a>
 

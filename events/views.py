@@ -1,9 +1,11 @@
+from django.utils import timezone 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Event
+from .models import Event,Registration
 from .forms import EventForm,RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -18,9 +20,20 @@ def event_list(request):
 # for each event details
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    is_registered = False
+
+    if request.user.is_authenticated:
+        is_registered = Registration.objects.filter(
+            student=request.user,
+            event = event
+        ).exists()
+
+    registration_count = Registration.objects.filter(event=event).count()
 
     return render(request, 'events/event_detail.html', {
-        'event': event
+        'event': event,
+        'is_registered': is_registered,
+        'registration_count':registration_count
     })
 
 # for creating events
@@ -119,3 +132,62 @@ def user_logout(request):
     logout(request)
     return redirect('event_list')
 
+# for registration 
+@login_required
+def event_register(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method != 'POST':
+        return redirect('event_detail', event_id=event.id)
+    event_datetime = timezone.make_aware(
+        timezone.datetime.combine(event.date, event.time)
+    )
+    if event_datetime < timezone.now():
+        messages.error(
+            request,
+            'Registration is closed because this event has already started.'
+        )
+        return redirect('event_detail', event_id=event.id)
+    registration, created = Registration.objects.get_or_create(
+        student=request.user,
+        event=event
+    )
+    if created:
+        messages.success(
+            request,
+            'You have successfully registered for this event!'
+        )
+    else:
+        messages.info(
+            request,
+            'You are already registered for this event.'
+        )
+
+    return redirect('event_detail', event_id=event.id)
+
+# for registration page 
+@login_required
+def my_registrations(request):
+    registrations = Registration.objects.filter(
+        student=request.user
+    ).select_related('event')
+
+    return render(request,'events/my_registrations.html',{'registrations': registrations})
+
+# for cancel 
+@login_required
+def cancel_registration(request, registration_id):
+    registration = get_object_or_404(
+        Registration,
+        id=registration_id,
+        student=request.user
+    )
+
+    if request.method == 'POST':
+        registration.delete()
+        messages.success(
+            request,
+            'Your event registration has been cancelled.'
+        )
+        return redirect('my_registrations')
+
+    return redirect('my_registrations')

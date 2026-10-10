@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Registers</title>
+</head>
+<body>
+    <h1>My Registered Events</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p>Welcome, {{ request.user.username }}!</p>
+    {% if registrations %}
+        {% for registration in registrations %}
+            <div>
+                <h2>{{ registration.event.title }}</h2>
+                <p>
+                    <strong>Date:</strong>
+                    {{ registration.event.date }}
+                </p>
+                <p>
+                    <strong>Time:</strong>
+                    {{ registration.event.time }}
+                </p>
+                <p>
+                    <strong>Venue:</strong>
+                    {{ registration.event.venue }}
+                </p>
+                <p>
+                    <strong>Registered on:</strong>
+                    {{ registration.registered_at }}
+                </p>
+                <form method="POST"
+                    action="{% url 'cancel_registration' registration.id %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                            onclick="return confirm('Are you sure you want to cancel this registration?');">
+                        Cancel Registration
+                    </button>
+                </form>
+                <hr>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>You haven't registered for any events yet.</p>
+        <a href="{% url 'event_list' %}">Browse Events</a>
+    {% endif %}
+    <p>
+        <a href="{% url 'event_list' %}">Back to All Events</a>
+    </p>
+</body>
+</html>
