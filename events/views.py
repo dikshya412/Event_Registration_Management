@@ -12,6 +12,16 @@ from django.contrib import messages
 # for event lists
 def event_list(request):
     events = Event.objects.all()
+    now = timezone.localtime()
+
+    for event in events:
+        event_datetime = timezone.make_aware(
+            timezone.datetime.combine(event.date, event.time)
+        )
+        if event_datetime < now:
+            event.status = 'Completed'
+        else:
+            event.status = 'Upcoming'
     
     return render(request, 'events/event_list.html', {
         'events': events
@@ -191,3 +201,20 @@ def cancel_registration(request, registration_id):
         return redirect('my_registrations')
 
     return redirect('my_registrations')
+
+
+@login_required
+def event_attendees(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if event.organizer != request.user:
+        return HttpResponse("You are not allowed to view these registrations.")
+
+    registrations = Registration.objects.filter(
+        event=event
+    ).select_related('student').order_by('registered_at')
+
+    return render(request,'events/event_attendees.html',{
+            'event': event,
+            'registrations': registrations
+        })

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Attendees</title>
+</head>
+<body>
+    <h1>Attendees for {{ event.title }}</h1>
+    <p><strong>Total registered students:</strong> {{ registrations.count }}</p>
+    {% if registrations %}
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in registrations %}
+                    <tr>
+                        <td>{{ registration.student.username }}</td>
+                        <td>{{ registration.student.email|default:"Not provided" }}</td>
+                        <td>{{ registration.registered_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No students have registered for this event yet.</p>
+    {% endif %}
+    <p>
+        <a href="{% url 'event_detail' event.id %}">Back to Event Details</a>
+    </p>
+</body>
+</html>

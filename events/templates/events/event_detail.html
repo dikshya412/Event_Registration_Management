@@ -42,6 +42,8 @@
     <a href="{% url 'event_update' event.id %}"> Edit Event </a>
     <br><br>
     <a href="{% url 'event_delete' event.id %}"> Delete Event </a>
+    <br>
+    <a href="{% url 'event_attendees' event.id %}">View Attendees </a>
     {% endif %}
 
     {% if user.is_authenticated %}
@@ -59,7 +61,6 @@
         to register for this event.
     </p>
     {% endif %}
-
     <br><br>
     <a href="{% url 'event_list' %}">← Back to Events</a>
 

@@ -14,21 +14,20 @@
 
         <div>
             <h2>{{ event.title }}</h2>
-
             <p>{{ event.description }}</p>
-
             <p>
                 Date: {{ event.date }}
             </p>
-
             <p>
                 Time: {{ event.time }}
             </p>
-
             <p>
                 Venue: {{ event.venue }}
             </p>
-
+            <codeBlock language="html" editable>
+                <p>
+                    <Strong>Status:</strong> {{event.status}}
+                </p> 
             <p>
                 Organizer: {{ event.organizer.username }}
             </p>
@@ -37,9 +36,7 @@
         </div>
 
     {% empty %}
-
         <p>No events available.</p>
-
     {% endfor %}
 </body>
 </html>
