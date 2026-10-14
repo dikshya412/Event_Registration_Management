@@ -11,8 +11,16 @@ from django.contrib import messages
 
 # for event lists
 def event_list(request):
+    search = request.GET.get('search','').strip()
+    status_filter = request.GET.get('status','')
+
     events = Event.objects.all()
+    if search: 
+        events = events.filter(title__icontains = search)  #searches events title without being caese-sensitive
+    
+
     now = timezone.localtime()
+    # event_list_data = []
 
     for event in events:
         event_datetime = timezone.make_aware(
@@ -22,9 +30,18 @@ def event_list(request):
             event.status = 'Completed'
         else:
             event.status = 'Upcoming'
+
+        # event_list_data.append(event)
+
+    if status_filter == 'Upcoming':
+        events = [event for event in events if event.status == 'Upcoming']
+    elif status_filter == 'Completed':
+        events = [event for event in events if event.status == 'Completed']
     
     return render(request, 'events/event_list.html', {
-        'events': events
+        'events': events,
+        'search': search,
+        'status_filter':status_filter
     })
 
 # for each event details

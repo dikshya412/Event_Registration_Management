@@ -7,11 +7,33 @@
 </head>
 <body>
     <h1>Campus Events</h1>
+    <form method="GET" action="{% url 'event_list' %}">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search events by title..."
+                value="{{ search }}"
+            >
+            <select name="status">
+                <option value="">All Events</option>
+                <option value="Upcoming"
+                    {% if status_filter == "Upcoming" %}selected{% endif %}>
+                    Upcoming
+                </option>
+                <option value="Completed"
+                    {% if status_filter == "Completed" %}selected{% endif %}>
+                    Completed
+                </option>
+            </select>
+            <button type="submit">Search</button>
+            {% if search or status_filter %}
+                <a href="{% url 'event_list' %}">Clear Search</a>
+            {% endif %}
+        </form>
 
     <a href="{% url 'event_create' %}"> Create New Event</a>
 
     {% for event in events %}
-
         <div>
             <h2>{{ event.title }}</h2>
             <p>{{ event.description }}</p>
