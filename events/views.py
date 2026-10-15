@@ -17,27 +17,13 @@ def event_list(request):
     events = Event.objects.all()
     if search: 
         events = events.filter(title__icontains = search)  #searches events title without being caese-sensitive
-    
 
-    now = timezone.localtime()
-    # event_list_data = []
+    if status_filter in ['Upcoming', 'Ongoing', 'Completed', 'Unscheduled']:
+        events = [
+            event for event in events
+            if event.status == status_filter
+        ]
 
-    for event in events:
-        event_datetime = timezone.make_aware(
-            timezone.datetime.combine(event.date, event.time)
-        )
-        if event_datetime < now:
-            event.status = 'Completed'
-        else:
-            event.status = 'Upcoming'
-
-        # event_list_data.append(event)
-
-    if status_filter == 'Upcoming':
-        events = [event for event in events if event.status == 'Upcoming']
-    elif status_filter == 'Completed':
-        events = [event for event in events if event.status == 'Completed']
-    
     return render(request, 'events/event_list.html', {
         'events': events,
         'search': search,
