@@ -1,26 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registr</title>
-</head>
-<body>
-    <h1>Create Account</h1>
+{% extends "events/layout.html" %}
+
+{% block title %}Create Account | CampusConnect{% endblock %}
+
+{% block content %}
+<section class="panel" style="max-width: 600px; margin: 30px auto;">
+    <h1>Create Your Account</h1>
+    <p class="muted">Join your campus community and register for events.</p>
+
     <form method="POST">
         {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div role="alert" style="color: #b91c1c;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
         {{ form.as_p }}
 
-        <button type="submit">
-            Register
+        <button class="btn" type="submit" style="width: 100%;">
+            Create Account
         </button>
     </form>
 
     <p>
         Already have an account?
-        <a href="#">Login</a>
+        <a href="{% url 'login' %}">Login</a>
     </p>
 
-    <a href="{% url 'event_list' %}">← Back to Events</a>
-</body>
-</html>
+    <p><a href="{% url 'event_list' %}">← Back to Events</a></p>
+</section>
+{% endblock %}

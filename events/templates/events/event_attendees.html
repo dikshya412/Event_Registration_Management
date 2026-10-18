@@ -1,37 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Attendees</title>
-</head>
-<body>
-    <h1>Attendees for {{ event.title }}</h1>
+{% extends "events/layout.html" %}
+
+{% block title %}Event Attendees | CampusConnect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table-wrap {
+        overflow-x: auto;
+    }
+
+    .attendee-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    .attendee-table th,
+    .attendee-table td {
+        padding: 13px 15px;
+        text-align: left;
+        border-bottom: 1px solid #D5E4E9;
+    }
+
+    .attendee-table th {
+        background: #24566A;
+        color: white;
+    }
+
+    .attendee-table tr:hover td {
+        background: #F0F8FA;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+    <div>
+        <h1>Event Attendees</h1>
+        <p class="muted">{{ event.title }}</p>
+    </div>
+    <a class="btn btn-outline" href="{% url 'event_detail' event.id %}">
+        ← Back to Event
+    </a>
+</div>
+
+<section class="panel">
+    <h2>Registered Students</h2>
     <p><strong>Total registered students:</strong> {{ registrations.count }}</p>
+
     {% if registrations %}
-        <table border="1" cellpadding="10">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Registration Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for registration in registrations %}
+        <div class="table-wrap">
+            <table class="attendee-table">
+                <thead>
                     <tr>
-                        <td>{{ registration.student.username }}</td>
-                        <td>{{ registration.student.email|default:"Not provided" }}</td>
-                        <td>{{ registration.registered_at|date:"M d, Y H:i" }}</td>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                        <tr>
+                            <td>{{ registration.student.username }}</td>
+                            <td>{{ registration.student.email|default:"Not provided" }}</td>
+                            <td>{{ registration.registered_at|date:"M d, Y g:i A" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No students have registered for this event yet.</p>
+        <p class="muted">No students have registered for this event yet.</p>
     {% endif %}
-    <p>
-        <a href="{% url 'event_detail' event.id %}">Back to Event Details</a>
-    </p>
-</body>
-</html>
+</section>
+{% endblock %}

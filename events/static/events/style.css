@@ -1,12 +1,12 @@
 :root {
-        --primary: #2347a5;
-        --primary-dark: #183477;
-        --background: #f4f6fb;
-        --surface: #ffffff;
-        --text: #1e293b;
-        --muted: #64748b;
-        --border: #e2e8f0;
-        --radius: 14px;
+    --primary: #24566A;
+    --primary-dark: #183747;
+    --background: #C9E2EA;
+    --surface: #FFFFFF;
+    --text: #183747;
+    --muted: #526D7A;
+    --border: #D5E4E9;
+    --radius: 14px;
     }
 
     * {
@@ -31,7 +31,7 @@
     }
 
     .navbar {
-        background: #172554;
+        background: #24566A;
         color: white;
         padding: 16px 24px;
     }

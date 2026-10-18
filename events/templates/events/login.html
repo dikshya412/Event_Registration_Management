@@ -1,32 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
+{% extends "events/layout.html" %}
+
+{% block title %}Login | CampusConnect{% endblock %}
+
+{% block content %}
+<section class="panel" style="max-width: 500px; margin: 30px auto;">
+    <h1>Welcome Back</h1>
+    <p class="muted">Log in to manage your campus events and registrations.</p>
+
     {% if error %}
-        <p>{{ error }}</p>
+        <p role="alert" style="color: #b91c1c;">{{ error }}</p>
     {% endif %}
 
     <form method="POST">
         {% csrf_token %}
+
         <p>
-            <label>Username:</label>
-            <input type="text" name="username" required>
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username"
+                   autocomplete="username" required>
         </p>
+
         <p>
-            <label>Password:</label>
-            <input type="password" name="password" required>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password"
+                   autocomplete="current-password" required>
         </p>
-        <button type="submit">Login</button>
+
+        <button class="btn" type="submit" style="width: 100%;">
+            Login
+        </button>
     </form>
+
     <p>
         Don't have an account?
-        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'register' %}">Create an account</a>
     </p>
-    <a href="{% url 'event_list' %}"> ← Back to Events </a>
-</body>
-</html>
+    <p><a href="{% url 'event_list' %}">← Back to Events</a></p>
+</section>
+{% endblock %}
