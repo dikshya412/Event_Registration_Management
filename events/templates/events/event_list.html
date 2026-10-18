@@ -1,68 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Events</title>
-</head>
-<body>
-    <h1>Campus Events</h1>
-    <form method="GET" action="{% url 'event_list' %}">
-            <input
-                type="text"
-                name="search"
-                placeholder="Search events by title..."
-                value="{{ search }}"
-            >
-            <select name="status">
-                <option value="">All Events</option>
-                <option value="Upcoming"
-                    {% if status_filter == "Upcoming" %}selected{% endif %}>
-                    Upcoming
-                </option>
-                <option value="Ongoing"
-                    {% if status_filter == "Ongoing" %}selected{% endif %}>
-                    Ongoing
-                </option>
-                <option value="Completed"
-                    {% if status_filter == "Completed" %}selected{% endif %}>
-                    Completed
-                </option>
-            </select>
-            <button type="submit">Search</button>
+{% extends "events/layout.html" %}
+
+{% block title %}Campus Events | CampusConnect{% endblock %}
+
+{% block content %}
+
+<div class="toolbar">
+    <div>
+        <h1>Campus Events</h1>
+        <p class="muted">Discover what's happening on campus.</p>
+    </div>
+
+    <a class="btn" href="{% url 'event_create' %}">
+        + Create Event
+    </a>
+</div>
+
+<section class="panel">
+    <form method="GET" action="{% url 'event_list' %}" class="filters">
+        <input
+            type="text"
+            name="search"
+            placeholder="Search events by title..."
+            value="{{ search }}"
+            aria-label="Search events by title"
+        >
+
+        <select name="status" aria-label="Filter events by status">
+            <option value="">All Events</option>
+
+            <option value="Upcoming"
+                {% if status_filter == "Upcoming" %}selected{% endif %}>
+                Upcoming
+            </option>
+
+            <option value="Ongoing"
+                {% if status_filter == "Ongoing" %}selected{% endif %}>
+                Ongoing
+            </option>
+
+            <option value="Completed"
+                {% if status_filter == "Completed" %}selected{% endif %}>
+                Completed
+            </option>
+
+            <option value="Unscheduled"
+                {% if status_filter == "Unscheduled" %}selected{% endif %}>
+                Unscheduled
+            </option>
+        </select>
+
+        <button class="btn" type="submit">Apply Filters</button>
+
+        {% if search or status_filter %}
+            <a class="btn btn-outline"
+               href="{% url 'event_list' %}">
+                Clear
+            </a>
+        {% endif %}
+    </form>
+</section>
+
+{% if events %}
+    <div class="event-grid">
+        {% for event in events %}
+            <article class="event-card">
+                <h2>{{ event.title }}</h2>
+
+                <p class="event-description">
+                    {{ event.description|truncatewords:25 }}
+                </p>
+
+                <div class="event-meta">
+                    <div>
+                        <strong>Date:</strong> {{ event.date|date:"M d, Y" }}
+                    </div>
+
+                    <div>
+                        <strong>Start:</strong> {{ event.time|time:"g:i A" }}
+                    </div>
+
+                    {% if event.end_time %}
+                        <div>
+                            <strong>End:</strong>
+                            {{ event.end_time|time:"g:i A" }}
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <strong>Venue:</strong> {{ event.venue }}
+                    </div>
+
+                    <div>
+                        <strong>Organizer:</strong>
+                        {{ event.organizer.username }}
+                    </div>
+                </div>
+
+                <div>
+                    <span class="status
+                        {% if event.status == 'Upcoming' %}status-upcoming
+                        {% elif event.status == 'Ongoing' %}status-ongoing
+                        {% elif event.status == 'Completed' %}status-completed
+                        {% elif event.status == 'Unscheduled' %}status-unscheduled
+                        {% endif %}">
+                        {{ event.status }}
+                    </span>
+                </div>
+
+                <div class="card-actions">
+                    <a class="btn"
+                       href="{% url 'event_detail' event.id %}">
+                        View Details →
+                    </a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <section class="panel empty-state">
+        <h2>No events found</h2>
+        <p class="muted">
             {% if search or status_filter %}
-                <a href="{% url 'event_list' %}">Clear Search</a>
+                Try a different search term or status filter.
+            {% else %}
+                There are no events to display yet.
             {% endif %}
-        </form>
+        </p>
 
-    <a href="{% url 'event_create' %}"> Create New Event</a>
+        {% if search or status_filter %}
+            <a class="btn btn-outline"
+               href="{% url 'event_list' %}">
+                View All Events
+            </a>
+        {% endif %}
+    </section>
+{% endif %}
 
-    {% for event in events %}
-        <div>
-            <h2>{{ event.title }}</h2>
-            <p>{{ event.description }}</p>
-            <p>
-                Date: {{ event.date }}
-            </p>
-            <p>
-                Time: {{ event.time }}
-            </p>
-            <p>
-                Venue: {{ event.venue }}
-            </p>
-            <codeBlock language="html" editable>
-                <p>
-                    <Strong>Status:</strong> {{event.status}}
-                </p> 
-            <p>
-                Organizer: {{ event.organizer.username }}
-            </p>
-
-            <a href="{% url 'event_detail' event.id %}">View Details</a>
-        </div>
-
-    {% empty %}
-        <p>No events available.</p>
-    {% endfor %}
-</body>
-</html>
+{% endblock %}
