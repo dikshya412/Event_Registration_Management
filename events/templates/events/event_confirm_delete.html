@@ -1,26 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Event</title>
-</head>
-<body>
+{% extends "events/layout.html" %}
+
+{% block title %}Delete Event | CampusConnect{% endblock %}
+
+{% block content %}
+<div class="toolbar">
     <h1>Delete Event</h1>
+    <a class="btn btn-outline" href="{% url 'event_detail' event.id %}">
+        ← Back to Event
+    </a>
+</div>
+
+<section class="panel">
+    <h2>Are you sure?</h2>
     <p>
-        Are you sure you want to delete
-        <strong>{{ event.title }}</strong>?
+        You're about to delete
+        <strong>{{ event.title }}</strong>.
     </p>
+    <p class="muted">This action may not be reversible.</p>
 
     <form method="POST">
         {% csrf_token %}
-
-        <button type="submit">
-            Yes, Delete
-        </button>
-
+        <div class="filters">
+            <button class="btn" type="submit">Yes, Delete Event</button>
+            <a class="btn btn-outline" href="{% url 'event_detail' event.id %}">
+                Cancel
+            </a>
+        </div>
     </form>
-
-    <a href="{% url 'event_detail' event.id %}"> Cancel </a>
-</body>
-</html>
+</section>
+{% endblock %}
