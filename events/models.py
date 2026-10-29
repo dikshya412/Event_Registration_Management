@@ -39,7 +39,7 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 
+        return self.title
 
 
 class Registration(models.Model):
