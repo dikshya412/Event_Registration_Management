@@ -14,7 +14,7 @@ def event_list(request):
     search = request.GET.get('search','').strip()
     status_filter = request.GET.get('status','')
 
-    events = Event.objects.all()
+    events = Event.objects.all().order_by('-created_at')
     if search: 
         events = events.filter(title__icontains = search)  #searches events title without being caese-sensitive
 
