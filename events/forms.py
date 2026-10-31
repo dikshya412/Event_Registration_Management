@@ -2,6 +2,8 @@ from django import forms
 from .models import Event
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User 
+from accounts.models import UserProfile
+
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
@@ -36,6 +38,12 @@ class EventForm(forms.ModelForm):
         
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
+
+    onboarding_preference = forms.ChoiceField(
+        choices=UserProfile.ONBOARDING_CHOICES,
+        widget=forms.RadioSelect,
+        required=True
+    )
     class Meta:
         model = User
         fields = [

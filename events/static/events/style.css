@@ -272,3 +272,43 @@
             padding: 16px;
         }
     }
+    /* Onboarding section */
+
+    .onboarding-field {
+        margin: 25px 0;
+    }
+
+    .onboarding-options {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .onboarding-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .onboarding-option:hover {
+        background: #f0f7fa;
+        border-color: var(--primary);
+    }
+
+    .onboarding-option input[type="radio"] {
+        width: 18px !important;
+        height: 18px;
+        padding: 0 !important;
+        margin: 0;
+        flex-shrink: 0;
+        accent-color: var(--primary);
+    }
+
+    .onboarding-option span {
+        flex: 1;
+    }

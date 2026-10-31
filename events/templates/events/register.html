@@ -1,3 +1,4 @@
+
 {% extends "events/layout.html" %}
 
 {% block title %}Create Account | CampusConnect{% endblock %}
@@ -16,7 +17,46 @@
             </div>
         {% endif %}
 
-        {{ form.as_p }}
+        <p>
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {{ form.username.errors }}
+        </p>
+
+        <p>
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {{ form.email.errors }}
+        </p>
+
+        <p>
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+        </p>
+
+        <p>
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+        </p>
+
+        <div class="onboarding-field">
+            <h3>What would you like to do on CampusConnect?</h3>
+            <p class="muted">
+                Choose what interests you. You can explore other features later.
+            </p>
+
+            <div class="onboarding-options">
+                {% for radio in form.onboarding_preference %}
+                    <label class="onboarding-option">
+                        {{ radio.tag }}
+                        <span>{{ radio.choice_label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+            {{ form.onboarding_preference.errors }}
+        </div>
 
         <button class="btn" type="submit" style="width: 100%;">
             Create Account

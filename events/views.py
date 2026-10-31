@@ -112,6 +112,10 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.profile.onboarding_preference = (
+                form.cleaned_data['onboarding_preference']
+            )
+            user.profile.save()
             login(request, user)
             return redirect('event_list')
     else:
